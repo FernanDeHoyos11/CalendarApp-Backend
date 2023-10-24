@@ -1,4 +1,5 @@
 const {response} = require('express');
+const bcrypt = require('bcryptjs')
 const { validationResult } = require('express-validator');
 const Usuarios = require('../models/Usuarios');
 
@@ -15,8 +16,11 @@ try {
             msg: 'un usuario ya existe con ese correo'
         })
     }
-
     usuario = new Usuarios(req.body)
+
+    const salt = bcrypt.genSaltSync()
+    usuario.password = bcrypt.hashSync(password, salt)
+
     await usuario.save()
 
     res.status(201).json({

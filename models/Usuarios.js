@@ -11,7 +11,7 @@ const usuarioSchema = Schema({
         require: true,
         unique: true
     },
-    contraseña: {
+    password: {
         type: String,
         require: true
     }
