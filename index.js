@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const auth = require('./routes/auth')
+const events = require('./routes/events')
 const { DBconnection } = require('./db/config')
 require('dotenv').config()
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use( express.static('public') )
 
 app.use('/api/auth', auth)
+app.use('/api/calendar', events)
 
 
 
