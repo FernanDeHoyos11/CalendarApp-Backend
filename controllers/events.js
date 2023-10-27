@@ -19,7 +19,7 @@ const CrearEvento = async (req, res=response) => {
         const eventoAgregado = await evento.save()
 
         res.status(200).json({
-            ok: false,
+            ok: true,
             eventoAgregado
         })
         
@@ -78,12 +78,44 @@ const ActualizarEvento = async(req, res=response) => {
     }
 }
 
-const EliminarEvento = (req, res=response) => {
+const EliminarEvento = async (req, res=response) => {
 
-    res.status(200).json({
-        ok: true,
-        msg: 'EliminarEvento'
-    })
+    const EventoId = req.params.id;
+    const uid = req.uid
+    try {
+
+        const evento = await Events.findById(EventoId)
+
+        if(!evento){
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe evento con ese ID',
+            })
+
+        }
+
+        if(evento.user.toString() !== uid){
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene permiso para eliminar este evento',
+            })
+        }
+
+
+        const eventoEliminado = await Events.findByIdAndDelete(EventoId)
+
+        res.status(200).json({
+            ok: true,
+            eventoEliminado
+        })
+        
+    } catch (error) {
+        
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        })
+    }
 }
 
 module.exports = {
